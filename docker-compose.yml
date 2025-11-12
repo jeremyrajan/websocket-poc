@@ -50,16 +50,27 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     container_name: websocket-frontend
-    ports:
-      - "3000:3000"
     environment:
-      - NEXT_PUBLIC_SOCKETIO_URL=http://localhost:3001
+      - NEXT_PUBLIC_SOCKETIO_URL=/socket
     volumes:
       - ./frontend:/app
       - /app/node_modules
       - /app/.next
     depends_on:
       - socketio-server
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: websocket-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - socketio-server
+      - backend
     restart: unless-stopped
 
 volumes:

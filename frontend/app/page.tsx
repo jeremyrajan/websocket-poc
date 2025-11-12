@@ -120,8 +120,9 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // Connect to Socket.IO server
-    const socketInstance = io('http://localhost:3001', {
+    // Connect to Socket.IO server via nginx proxy
+    const socketInstance = io('/', {
+      path: '/socket/socket.io',
       transports: ['websocket', 'polling'],
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
